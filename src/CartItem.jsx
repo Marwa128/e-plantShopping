@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
@@ -9,44 +10,39 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
-      let total = 0;
+    let total = 0;
 
-  carth.forEach((item) => {
-    const quantity = item.quantity;
-    const cost = parseFloat(item.cost.substring(1));
+    cart.forEach((item) => {
+      const quantity = item.quantity;
+      const cost = parseFloat(item.cost.substring(1));
 
-    total += cost * quantity;
-  });
+      total += cost * quantity;
+    });
 
-  return total;
- 
+    return total;
   };
 
   const handleContinueShopping = (e) => {
-
-onContinueShopping(e);
-   
+    onContinueShopping(e);
   };
 
-
   const handleCheckoutShopping = (e) => {
-  alert('Functionality to be added for future reference');
-};
+    alert('Functionality to be added for future reference');
+  };
 
-
-
+  // Handle incrementing the quantity of a cart item
   const handleIncrement = (item) => {
-dispatch(
+    dispatch(
       updateQuantity({
         name: item.name,
         quantity: item.quantity + 1,
       })
     );
-
   };
 
+  // Handle decrementing the quantity or removing the item if quantity reaches 0
   const handleDecrement = (item) => {
-if (item.quantity > 1) {
+    if (item.quantity > 1) {
       dispatch(
         updateQuantity({
           name: item.name,
@@ -56,19 +52,16 @@ if (item.quantity > 1) {
     } else {
       dispatch(removeItem(item.name));
     }
-
-
-   
   };
 
   const handleRemove = (item) => {
-dispatch(removeItem(item.name));
+    dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-const price = parseFloat(item.cost.substring(1));
-  return price * item.quantity;
+    const price = parseFloat(item.cost.substring(1));
+    return price * item.quantity;
   };
 
   return (
@@ -96,10 +89,15 @@ const price = parseFloat(item.cost.substring(1));
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={handleCheckoutShopping}>Checkout</button>
       </div>
     </div>
   );
+};
+
+// PropTypes validation for component props
+CartItem.propTypes = {
+  onContinueShopping: PropTypes.func.isRequired,
 };
 
 export default CartItem;
